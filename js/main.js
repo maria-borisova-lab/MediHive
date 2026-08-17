@@ -232,52 +232,52 @@
             `;
         }
 
-        // --- ВХОД И РЕГИСТРАЦИЯ ---
-        document.getElementById('register-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const firstName = document.getElementById('reg-firstname').value;
-            const lastName = document.getElementById('reg-lastname').value;
-            const email = document.getElementById('reg-email').value;
-            const password = document.getElementById('reg-password').value;
-            const confirmPassword = document.getElementById('reg-confirm-password').value;
+       // --- ВХОД И РЕГИСТРАЦИЯ ---
+document.getElementById('register-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const firstName = document.getElementById('reg-firstname').value.trim();
+    const lastName = document.getElementById('reg-lastname').value.trim();
+    const email = document.getElementById('reg-email').value.trim().toLowerCase();
+    const password = document.getElementById('reg-password').value;
+    const confirmPassword = document.getElementById('reg-confirm-password').value;
 
-            if (password !== confirmPassword) {
-                alert("Грешка: Паролите не съвпадат!");
-                return;
-            }
+    if (password !== confirmPassword) {
+        alert("Грешка: Паролите не съвпадат!");
+        return;
+    }
 
-            let users = JSON.parse(localStorage.getItem('registeredUsers')) || [];
-            if (users.some(user => user.email === email)) {
-                alert("Грешка: Имейлът вече съществува!");
-                return;
-            }
+    let users = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+    if (users.some(user => user.email === email)) {
+        alert("Грешка: Имейлът вече съществува!");
+        return;
+    }
 
-            users.push({ firstName, lastName, email, password });
-            localStorage.setItem('registeredUsers', JSON.stringify(users));
+    users.push({ firstName, lastName, email, password });
+    localStorage.setItem('registeredUsers', JSON.stringify(users));
 
-            alert("Успешна регистрация! Вече можете да влезете в профила си.");
-            this.reset();
-            navigateTo('login-section');
-        });
-        
-        document.getElementById('login-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
+    alert("Успешна регистрация! Вече можете да влезете в профила си.");
+    this.reset();
+    navigateTo('login-section');
+});
 
-            let users = JSON.parse(localStorage.getItem('registeredUsers')) || [];
-            const validUser = users.find(user => user.email === email && user.password === password);
+document.getElementById('login-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const email = document.getElementById('login-email').value.trim().toLowerCase(); // 👈 Коригирано тук
+    const password = document.getElementById('login-password').value;
 
-            if (validUser) {
-                localStorage.setItem('currentUser', JSON.stringify(validUser));
-                currentUser = validUser;
-                renderAuthButtons();
-                navigateTo('main-content-section'); 
-                this.reset();
-            } else {
-                alert("Грешка: Невалидни данни за вход!");
-            }
-        });
+    let users = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+    const validUser = users.find(user => user.email === email && user.password === password);
+
+    if (validUser) {
+        localStorage.setItem('currentUser', JSON.stringify(validUser));
+        currentUser = validUser;
+        renderAuthButtons();
+        navigateTo('main-content-section'); 
+        this.reset();
+    } else {
+        alert("Грешка: Невалидни данни за вход!");
+    }
+});
 
         // --- КАРТА И ЛОГИКА ЗА СЕКЦИЯТА "МЕДИЦИНСКИ ЦЕНТРОВЕ" ---
         let currentCenterId = null;
@@ -400,6 +400,10 @@
             const todayStr = `${yyyy}-${mm}-${dd}`;
 
             const isToday = (dateInput === todayStr);
+                if (new Date(dateInput) < new Date(todayStr)) {
+    calendarContainer.innerHTML = '<p style="color: #c0392b; grid-column: 1/-1; font-weight: bold;">Не можете да избирате изминали дати.</p>';
+    return;
+}
 
             for (let h = 9; h <= 15; h++) {
                 for (let m = 0; m < 60; m += 20) {
