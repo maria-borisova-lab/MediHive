@@ -14,9 +14,191 @@
 </head>
 <body>
 
-    <!-- HTML съдържание  -->
+    <header>
+        <div class="logo" onclick="navigateTo('main-content-section')">MediHive</div>
+        <div class="auth-buttons" id="auth-buttons-container"></div>
+    </header>
 
-    <!-- JS файл  -->
+    <div class="container">
+        
+        <!-- ================= СЕКЦИЯ 1: ГЛАВНО СЪДЪРЖАНИЕ ================= -->
+        <div id="main-content-section">
+            <div class="services-wrapper">
+                <div class="services-info">
+    <h2>Медицински Услуги</h2>
+    <p>Изберете услуга от списъка <span class="desktop-text">вдясно</span><span class="mobile-text">отдолу</span>, за да видите центровете на картата, които я предлагат.</p>
+</div>
+                
+                <div class="honeycomb-container">
+                    <div class="hex-row">
+                        <div class="hex-wrapper" onclick="scrollToMap('Кръвни изследвания')">
+                            <div class="hex-icon">🩸</div>
+                            <div class="hex-title">Кръвни<br>изследвания</div>
+                        </div>
+                        <div class="hex-wrapper" onclick="scrollToMap('Урина и микробиология')">
+                            <div class="hex-icon">🧪</div>
+                            <div class="hex-title">Урина и<br>микробиология</div>
+                        </div>
+                        <div class="hex-wrapper" onclick="scrollToMap('ЕКГ')">
+                            <div class="hex-icon">❤️</div>
+                            <div class="hex-title">ЕКГ</div>
+                        </div>
+                    </div>
+                    <div class="hex-row">
+                        <div class="hex-wrapper" onclick="scrollToMap('Ехография')">
+                            <div class="hex-icon">💻</div>
+                            <div class="hex-title">Ехография</div>
+                        </div>
+                        <div class="hex-wrapper" onclick="scrollToMap('ЯМР')">
+                            <div class="hex-icon">🩻</div>
+                            <div class="hex-title">ЯМР</div>
+                        </div>
+                        <div class="hex-wrapper" onclick="scrollToMap('Рентген')">
+                            <div class="hex-icon">🦴</div>
+                            <div class="hex-title">Рентген</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Секция Карта и Медицински центрове -->
+            <div id="map-section">
+                <h2 id="map-desc">Карта на медицинските центрове</h2>
+                <p>Изберете услуга по-горе, за да се заредят медицинските центрове.</p>
+                <button class="btn-location" onclick="locateUser()">📍 Къде съм в момента?</button>
+                <div id="map"></div>
+
+                <!-- Списък с Медицински Центрове (С HOVER ЕФЕКТ) -->
+                <div id="centers-list-container" class="centers-grid"></div>
+            </div>
+
+            <!-- Секция за Записване на час -->
+            <div id="booking-section">
+                <h2>Записване на час</h2>
+                <h3 id="selected-center-title" style="color: #2f3ab2; margin-bottom: 5px;"></h3>
+                <p id="selected-center-address" style="color: #666; font-style: italic; margin-top: 0;"></p>
+                
+                <div class="date-picker-container">
+                    <label for="appointment-date" style="font-weight: bold; font-size: 16px;">Изберете дата от календара: </label>
+                    <input type="date" id="appointment-date" onchange="generateTimeSlots()">
+                </div>
+                
+                <div class="calendar-grid" id="calendar-container"></div>
+                
+                <div id="summary" class="summary-box"></div>
+            </div>
+        </div>
+
+
+        <!-- ================= СЕКЦИЯ 2: САМО ВХОД ================= -->
+        <div id="login-section" style="display: none;">
+            <div class="auth-page-container">
+                <div class="auth-card">
+                    <h2>Вход в системата</h2>
+                    <form id="login-form">
+                        <input type="email" id="login-email" placeholder="Имейл адрес" required>
+                        <input type="password" id="login-password" placeholder="Парола" required>
+                        <button type="submit" class="btn btn-register" style="border-radius: 6px;">Влез</button>
+                    </form>
+                    <p style="margin-top: 20px; font-size: 14px;">
+                        Нямате профил? <a href="#" onclick="event.preventDefault(); navigateTo('register-section')">Регистрирайте се тук</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ================= СЕКЦИЯ 3: САМО РЕГИСТРАЦИЯ ================= -->
+        <div id="register-section" style="display: none;">
+            <div class="auth-page-container">
+                <div class="auth-card">
+                    <h2>Нова регистрация</h2>
+                    <form id="register-form">
+                        <input type="text" id="reg-firstname" placeholder="Име" required>
+                        <input type="text" id="reg-lastname" placeholder="Фамилия" required>
+                        <input type="email" id="reg-email" placeholder="Имейл" required>
+                        <input type="password" id="reg-password" placeholder="Парола" required minlength="6">
+                        <input type="password" id="reg-confirm-password" placeholder="Потвърди парола" required minlength="6">
+                        <button type="submit" class="btn btn-register" style="border-radius: 6px;">Регистрирай ме</button>
+                    </form>
+                    <p style="margin-top: 20px; font-size: 14px;">
+                        Вече имате профил? <a href="#" onclick="event.preventDefault(); navigateTo('login-section')">Влезте оттук</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ================= СЕКЦИЯ 4: МОЯТ ПРОФИЛ ================= -->
+        <div id="profile-section" style="display: none; text-align: left; margin-top: 20px;">
+            
+            <!-- Данни на пациента -->
+            <div class="lab-container">
+                <div class="lab-header-title">👤 Профил на пациента</div>
+                <div class="lab-body-content">
+                    <div><strong>Пациент:</strong> <span id="profile-user-name" style="font-weight: normal;"></span></div>
+                    <div><strong>Имейл:</strong> <span id="profile-user-email" style="font-weight: normal;"></span></div>
+                </div>
+            </div>
+
+            <!-- Главна навигация ВЪТРЕ в Профила -->
+            <div class="main-profile-nav">
+                <button id="profile-nav-appointments" class="main-nav-btn active" onclick="switchProfileMainTab('appointments')">📅 Моите Резервации</button>
+                <button id="profile-nav-results" class="main-nav-btn" onclick="switchProfileMainTab('results')">🧪 Резултати от изследванията</button>
+            </div>
+
+            <!-- ТАБ 1: Резервации -->
+            <div id="profile-tab-appointments" class="lab-container">
+                <div class="lab-header-title">📅 Часове за прегледи</div>
+                <div class="lab-body-content">
+                    <div class="profile-tabs">
+                        <button id="tab-upcoming-btn" class="tab-btn active" onclick="switchAppointmentsTab('upcoming')">Предстоящи резервации</button>
+                        <button id="tab-past-btn" class="tab-btn" onclick="switchAppointmentsTab('past')">Минали резервации</button>
+                    </div>
+
+                    <div id="appointments-list-container">
+                        <!-- Динамично зареждане на резервациите -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ТАБ 2: Резултати от изследванията С ПАДАЩО МЕНЮ (DROPDOWN) -->
+            <div id="profile-tab-results" class="lab-container" style="display: none;">
+                <div class="lab-header-title">🧪 Резултати от изследванията</div>
+                <div class="lab-body-content">
+                    
+                    <!-- БУТОН ЗА ИЗБОР (ИЗСЛЕДВАНЕ / - ВСИЧКИ -) -->
+                    <div class="select-research-wrapper">
+                        <label for="research-select-dropdown" class="select-research-label">Изследване</label>
+                        <select id="research-select-dropdown" class="custom-select-btn" onchange="showLabResultFromSelect(this.value)">
+                            <option value="">- Всички -</option>
+                            <option value="Кръвни изследвания">Кръвни изследвания</option>
+                            <option value="Урина и микробиология">Урина и микробиология</option>
+                            <option value="ЕКГ">ЕКГ</option>
+                            <option value="Ехография">Ехография</option>
+                            <option value="ЯМР">ЯМР</option>
+                            <option value="Рентген">Рентген</option>
+                        </select>
+                    </div>
+
+                    <!-- ТУК СЕ ЗАРЕЖДАТ ИЗСЛЕДВАНИЯТА -->
+                    <div id="lab-result-display-area" style="border-top: 2px dashed #ddd; padding-top: 20px; margin-top: 10px;">
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn" onclick="logout()" style="background-color: #e74c3c; color: white; border: none; padding: 10px 20px; border-radius: 5px; text-transform: none; margin-top: 10px;">
+                Изход от профила
+            </button>
+        </div>
+
+    </div>
+
+    <footer>
+        <p><strong>Контакти:</strong></p>
+        <p>E-mail: medihive@medi.bg | Телефон: (02) 07 08 357</p>
+    </footer>
+    
     <script src="js/main.js"></script>
 </body>
 </html>
