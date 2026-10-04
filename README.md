@@ -14,7 +14,4 @@ A modern web platform for booking doctor appointments, viewing laboratory result
 * HTML5
 * CSS3 (Custom Flexbox / Grid Layout)
 * JavaScript (ES6+)
- 
-## Running the Project
- 
-Simply open `index.html` in any modern web browser.
+
